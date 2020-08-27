@@ -61,6 +61,7 @@ const typeDefs = gql`
     addBook(title: String!, authorId: ID!): Book
     removeBook(id: ID!): Book
     addAuthor(name: String!): Author
+    removeAuthor(id: ID!): Author
   }
 `;
 
@@ -151,6 +152,21 @@ const resolvers = {
       authors.push(newAuthor);
 
       return newAuthor;
+    },
+    removeAuthor: (_, { id }) => {
+      let author = authors.find((_author) => _author.id === id);
+
+      if (!author) {
+        throw new Error("Author does not Exist");
+      }
+
+      if (author.books.length > 0) {
+        books = books.filter((book) => !author.books.includes(book.id));
+      }
+
+      authors = authors.filter((_author) => _author.id !== id);
+
+      return author;
     },
   },
 };
