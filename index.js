@@ -60,6 +60,7 @@ const typeDefs = gql`
   type Mutation {
     addBook(title: String!, authorId: ID!): Book
     removeBook(id: ID!): Book
+    addAuthor(name: String!): Author
   }
 `;
 
@@ -100,7 +101,7 @@ const resolvers = {
       }
 
       const newBook = {
-        id: String(books.length),
+        id: String(Number(books[books.length - 1].id) + 1),
         title,
       };
 
@@ -139,6 +140,17 @@ const resolvers = {
         ...book,
         author,
       };
+    },
+    addAuthor: (_, { name }) => {
+      const newAuthor = {
+        id: String(Number(authors[authors.length - 1].id) + 1),
+        name,
+        books: [],
+      };
+
+      authors.push(newAuthor);
+
+      return newAuthor;
     },
   },
 };
