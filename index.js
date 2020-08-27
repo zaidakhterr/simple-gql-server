@@ -71,7 +71,14 @@ const resolvers = {
           author,
         };
       }),
-    book: (_, { id }) => books.find((book) => book.id === id),
+    book: (_, { id }) => {
+      let _book = books.find((book) => book.id === id);
+      let author = authors.find((author) => author.books.includes(_book.id));
+      return {
+        ..._book,
+        author,
+      };
+    },
   },
   Mutation: {
     addBook: (_, { title, author }) => {
