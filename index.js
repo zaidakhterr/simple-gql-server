@@ -1,6 +1,6 @@
 const { ApolloServer, gql } = require("apollo-server");
 
-const books = [
+let books = [
   {
     id: "1",
     title: "Harry Potter and the Philosopher's Stone",
@@ -52,6 +52,7 @@ const typeDefs = gql`
 
   type Mutation {
     addBook(title: String!, author: String!): Book
+    removeBook(id: ID!): Book
   }
 `;
 
@@ -69,6 +70,11 @@ const resolvers = {
       };
       books.push(newBook);
       return newBook;
+    },
+    removeBook: (_, { id }) => {
+      const deletedBook = books.find((book) => book.id === id);
+      books = books.filter((book) => book.id !== id);
+      return deletedBook;
     },
   },
 };
