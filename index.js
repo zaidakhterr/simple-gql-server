@@ -49,12 +49,27 @@ const typeDefs = gql`
     books: [Book]
     book(id: ID!): Book
   }
+
+  type Mutation {
+    addBook(title: String!, author: String!): Book
+  }
 `;
 
 const resolvers = {
   Query: {
     books: () => books,
     book: (_, { id }) => books.find((book) => book.id === id),
+  },
+  Mutation: {
+    addBook: (_, { title, author }) => {
+      const newBook = {
+        id: String(books.length),
+        title,
+        author,
+      };
+      books.push(newBook);
+      return newBook;
+    },
   },
 };
 
