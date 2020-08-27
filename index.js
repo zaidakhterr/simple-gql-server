@@ -4,45 +4,50 @@ let books = [
   {
     id: "1",
     title: "Harry Potter and the Philosopher's Stone",
-    author: "J.K. Rowling",
   },
   {
     id: "2",
     title: "Harry Potter and the Chamber of Secrets",
-    author: "J.K. Rowling",
   },
   {
     id: "3",
-    title: "Harry Potter and the Prisoner of Azkaban",
-    author: "J.K. Rowling",
+    title: "Revive you Heart",
   },
   {
     id: "4",
-    title: "Harry Potter and the Goblet of Fire",
-    author: "J.K. Rowling",
+    title: "Tuesdays with Morrie",
+  },
+];
+
+let authors = [
+  {
+    id: "1",
+    name: "J.K. Rowling",
+    books: ["1", "2"],
   },
   {
-    id: "5",
-    title: "Harry Potter and the Order of the Phoenix",
-    author: "J.K. Rowling",
+    id: "2",
+    name: "Nauman Ali",
+    books: ["3"],
   },
   {
-    id: "6",
-    title: "Harry Potter and the Half-Blood Prince",
-    author: "J.K. Rowling",
-  },
-  {
-    id: "7",
-    title: "Harry Potter and the Deathly Hallows",
-    author: "J.K. Rowling",
+    id: "3",
+    name: "Mitch Albom",
+    books: ["4"],
   },
 ];
 
 const typeDefs = gql`
+  type Author {
+    id: ID!
+    name: String!
+    books: [ID!]
+  }
+
   type Book {
     id: ID!
     title: String!
-    author: String!
+    author: Author!
   }
 
   type Query {
@@ -58,7 +63,14 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    books: () => books,
+    books: () =>
+      books.map((book) => {
+        let author = authors.find((author) => author.books.includes(book.id));
+        return {
+          ...book,
+          author,
+        };
+      }),
     book: (_, { id }) => books.find((book) => book.id === id),
   },
   Mutation: {
