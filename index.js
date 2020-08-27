@@ -1,41 +1,6 @@
 const { ApolloServer, gql } = require("apollo-server");
-
-let books = [
-  {
-    id: "1",
-    title: "Harry Potter and the Philosopher's Stone",
-  },
-  {
-    id: "2",
-    title: "Harry Potter and the Chamber of Secrets",
-  },
-  {
-    id: "3",
-    title: "Revive you Heart",
-  },
-  {
-    id: "4",
-    title: "Tuesdays with Morrie",
-  },
-];
-
-let authors = [
-  {
-    id: "1",
-    name: "J.K. Rowling",
-    books: ["1", "2"],
-  },
-  {
-    id: "2",
-    name: "Nauman Ali",
-    books: ["3"],
-  },
-  {
-    id: "3",
-    name: "Mitch Albom",
-    books: ["4"],
-  },
-];
+let { books } = require("./data/books");
+let { authors } = require("./data/authors");
 
 const typeDefs = gql`
   type Author {
