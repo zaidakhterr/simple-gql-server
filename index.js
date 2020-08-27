@@ -54,6 +54,7 @@ const typeDefs = gql`
     books: [Book]
     book(id: ID!): Book!
     authors: [Author]
+    author(id: ID!): Author!
   }
 
   type Mutation {
@@ -88,6 +89,7 @@ const resolvers = {
       };
     },
     authors: () => authors,
+    author: (_, { id }) => authors.find((author) => author.id === id),
   },
   Mutation: {
     addBook: (_, { title, authorId }) => {
