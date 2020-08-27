@@ -56,7 +56,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    addBook(title: String!, author: String!): Book
+    addBook(title: String!, authorId: ID!): Book
     removeBook(id: ID!): Book
   }
 `;
@@ -72,23 +72,37 @@ const resolvers = {
         };
       }),
     book: (_, { id }) => {
-      let _book = books.find((book) => book.id === id);
-      let author = authors.find((author) => author.books.includes(_book.id));
+      let book = books.find((_book) => _book.id === id);
+      let author = authors.find((author) => author.books.includes(book.id));
       return {
-        ..._book,
+        ...book,
         author,
       };
     },
   },
   Mutation: {
-    addBook: (_, { title, author }) => {
+    addBook: (_, { title, authorId }) => {
+      let author = authors.find((_author) => _author.id === authorId);
+
+      if (!author) {
+        throw new Error("Author does not Exist");
+      }
       const newBook = {
         id: String(books.length),
         title,
+      };
+
+      authors.forEach((_author) => {
+        if (_author.id === author.id) {
+          _author.books = [..._author.books, newBook.id];
+        }
+      });
+
+      books.push(newBook);
+      return {
+        ...newBook,
         author,
       };
-      books.push(newBook);
-      return newBook;
     },
     removeBook: (_, { id }) => {
       const deletedBook = books.find((book) => book.id === id);
